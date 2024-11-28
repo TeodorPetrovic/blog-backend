@@ -27,25 +27,27 @@ export class AuthService {
         const user = await this.userService.findByEmail(loginData.email);
 
         if (!user) {
-            throw new BadRequestException();
+            throw new BadRequestException("User Does not exist");
         }
 
-        const isMatch = await bcrypt.compare(user.password, loginData.password);
+        const isMatch = await bcrypt.compare(loginData.password, user.password);
 
         if (!isMatch) {
-            throw new BadRequestException();
+            throw new BadRequestException("Passwords do not match");
         }
 
-        const accessToken = this.generateToken(
+        const accessToken = await this.generateToken(
             {
+                id: user.id,
                 email: loginData.email,
                 type: 'access'
             },
             this.configService.get<string>('JWT_EXPIRATION')
         )
         
-        const refreshToken = this.generateToken(
+        const refreshToken = await this.generateToken(
             {
+                id: user.id,
                 email: loginData.email,
                 type: 'refresh'
             },

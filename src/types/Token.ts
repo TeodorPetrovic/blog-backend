@@ -1,5 +1,5 @@
 export interface Token {
-    id?: number;
+    id: number;
     email: string;
     type: 'access' | 'refresh';
 }
