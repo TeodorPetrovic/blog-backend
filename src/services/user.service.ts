@@ -4,13 +4,19 @@ import { UserRepository } from "src/repositories/user.repository";
 
 @Injectable()
 export class UserService {
-    constructor( private userRepositoy: UserRepository) {}
+    constructor( private userRepository: UserRepository) {}
 
     async findByEmail(email: string): Promise<User | null> {
-        return await this.userRepositoy.findByEmail(email);
+        return await this.userRepository.findByEmail(email);
     }
 
     async createUser(user: Partial<User>): Promise<User> {
-        return await this.userRepositoy.create(user);
+        return await this.userRepository.create(user);
+    }
+
+    async findByUsernameOrEmail(username: string, email: string): Promise<User | null> {
+        return await this.userRepository.findOne({
+            $or: [{ username }, { email }]
+        });
     }
 }

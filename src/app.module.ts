@@ -4,23 +4,31 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './modules/user.module';
 import { AuthModule } from './modules/auth.module';
 import { BlogModule } from './modules/blog.module';
+import { CategoryModule } from './modules/category.module';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGO_URI'),
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
     UserModule,
-    AuthModule,
-    BlogModule
+    AuthModule, // Ensure AuthModule is imported
+    BlogModule,
+    CategoryModule,
   ],
- 
+  providers: [
+    {
+      provide: 'APP_GUARD',
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

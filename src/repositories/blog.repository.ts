@@ -30,6 +30,30 @@ export class BlogRepository {
       .exec();
   }
 
+  async findByCategory(categoryId: string): Promise<Blog[]> {
+    return this.blogModel
+      .find({ category: categoryId })
+      .populate('author', '-password')
+      .populate('comments.user', '-password')
+      .exec();
+  }
+
+  async findByTag(tag: string): Promise<Blog[]> {
+    return this.blogModel
+      .find({ tags: tag })
+      .populate('author', '-password')
+      .populate('comments.user', '-password')
+      .exec();
+  }
+
+  async findByCategoryAndTag(categoryId: string, tag: string): Promise<Blog[]> {
+    return this.blogModel
+      .find({ category: categoryId, tags: tag })
+      .populate('author', '-password')
+      .populate('comments.user', '-password')
+      .exec();
+  }
+
   async update(id: string, updateData: Partial<Blog>): Promise<Blog | null> {
     return this.blogModel
       .findByIdAndUpdate(id, updateData, { new: true })

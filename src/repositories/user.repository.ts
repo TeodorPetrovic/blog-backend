@@ -14,4 +14,8 @@ export class UserRepository {
     async create(user: Partial<User>): Promise<User> {
         return new this.userModel(user).save()
     }
+
+    async findOne(query: any): Promise<User | null> {
+        return await this.userModel.findOne(query).exec();
+    }
 }

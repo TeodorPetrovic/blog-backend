@@ -22,6 +22,18 @@ export class BlogService {
     return blog;
   }
 
+  async findByCategory(categoryId: string): Promise<Blog[]> {
+    return this.blogRepository.findByCategory(categoryId);
+  }
+
+  async findByTag(tag: string): Promise<Blog[]> {
+    return this.blogRepository.findByTag(tag);
+  }
+
+  async findByCategoryAndTag(categoryId: string, tag: string): Promise<Blog[]> {
+    return this.blogRepository.findByCategoryAndTag(categoryId, tag);
+  }
+
   async update(id: string, updateData: Partial<Blog>): Promise<Blog> {
     const blog = await this.blogRepository.update(id, updateData);
     if (!blog) {
